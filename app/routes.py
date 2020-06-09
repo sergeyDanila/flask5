@@ -1,15 +1,14 @@
 from datetime import datetime
+from hashlib import md5
 
 from flask import Flask, render_template, request, redirect, url_for, session
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from sqlalchemy import text
 
 from app import app, db
 
-from app.models import Item, Session, Cart, CartItem, User, Order, OrderItem
+from app.models import Item, Session, Cart, CartItem, User, Order
 from app.form import LoginForm, RegisterForm, CartForm
 
+salt ='PositAndPoperchit'
 
 def current_ses():
     if session.get('id', -10) == -10:
@@ -119,7 +118,6 @@ def render_cart():
 def cart_remove_item(item_id):
     cart = current_cart()
     cart_id = cart.get('id', 0)
-    # тут sql инжекция не страшна т.к. преобразование к int левого пользовательского ввода даст ошибку
     db.session.execute("delete from cart_items where cart_id = "
                        + str(cart_id) + " and item_id = "
                        + str(item_id) + ";")
@@ -145,11 +143,14 @@ def render_login():
     if request.method == "POST":
         login = form.login.data
         password = form.password.data
+        password = password + salt
+        hash_obj = md5(password.encode())
+        password_hash = hash_obj.hexdigest()
 
         user = db.session.query(User).filter(User.email == login).first()
         # user = db.session.execute("select email, password from users where email = '" + login + "';").fetchone()
 
-        if user is None or password != user.password:
+        if user is None or password_hash != user.password:
             error_msg = "Неверный логин или пароль"
         else:
             ses.user_id = user.id
@@ -168,12 +169,15 @@ def render_reg():
     if request.method == "POST":
         login = form.login.data
         password = form.password.data
+        password = password + salt
+        hash_obj = md5((password).encode())
+        password_hash = hash_obj.hexdigest()
         user = db.session.query(User).filter(User.email == login).first()
         if user is not None:
             error_msg = "Пользователь с таким логином уже есть"
             return render_template("register.html", error_msg=error_msg, form=form)
 
-        user = User(email=login, password=password, created=datetime.now(), remote_addr=request.remote_addr)
+        user = User(email=login, password=password_hash, created=datetime.now(), remote_addr=request.remote_addr)
         db.session.add(user)
         db.session.commit()
 
