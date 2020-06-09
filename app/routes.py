@@ -132,6 +132,7 @@ def cart_remove_item(item_id):
 def ses_logout():
     session.pop('id')
     session.pop('is_auth')
+    session.pop('error')
     return redirect('/')
 
 
@@ -156,6 +157,7 @@ def render_login():
             ses.user_id = user.id
             db.session.commit()
             session["is_auth"] = True
+            session.pop('error')
 
             return render_template("account.html", title='Главная', cart=current_cart())
 
@@ -186,6 +188,7 @@ def render_reg():
         ses.user_id = user.id
         db.session.commit()
         session["is_auth"] = True
+        session.pop('error')
         return redirect("/account/")
 
     return render_template("register.html", error_msg=error_msg, form=form)
@@ -195,7 +198,12 @@ def render_reg():
 def render_order():
     ses = current_ses()
     form = CartForm()
+
     if request.method == "POST":
+        if ses.user_id is None:
+            session['error'] = 'Требуется залогиниться или зарегистрироваться на сайте'
+            return redirect('/cart/')
+
         email = form.email.data
         name = form.name.data
         phone = form.phone.data
