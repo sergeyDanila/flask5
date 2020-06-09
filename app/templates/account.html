@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block body %}
+  <main class="container">
+    <section class="row">
+      <div class="col-12 col-lg-8">
+        <h1 class="h3 my-5">Личный кабинет. Заказы</h1>
+        <div class="card">
+            {% for i in orders %}
+            <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-7 col-lg-9">
+                  <span class="h5 font-weight-bold">Заказ № {{ i.id }} от {{ i.created }}</span>
+                  <span class="h5">на сумму {{ i.total }} P ({{ i.status }})</span>
+                </div>
+
+              </div>
+            </li>
+                <div class="card-body">
+              <div class="row">
+                 {%  for p in i.pos %}
+                <p class="col-4 text-muted">{{ p[0] }}</p>
+                <p class="col-2 text-muted"> {{ p[1] }}</p>
+                <p class="col-6 text-muted"> {{ p[2] }} </p>
+               {% endfor %}
+              </div>
+            </div>
+        </ul>
+        </div>
+            {% endfor %}
+
+      </div>
+    </section>
+  </main>
+{% endblock %}

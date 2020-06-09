@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block body %}
+  <main class="container">
+    <h1 class="h3 my-4">Корзина</h1>
+
+    {% if dels == 1 %}<div class="alert alert-warning" role="alert">Блюдо удалено из корзины</div> {% endif %}
+    {% if auth == False %}<div class="alert alert-warning" role="alert">Чтобы сделать заказ – <a href="/auth/">войдите</a> или <a href="/register/">зарегистрируйтесь</a></div>{% endif %}
+
+    <div class="row mt-5">
+
+
+        <div class="col-4">
+          <form action="/order/" method="POST">
+          <h4 class="">Ваши данные</h4>
+          <div class=" md-4 order-md-1">
+            <div class="mt-3 mb-3">
+              <label for="name">Ваше имя</label>
+              {{ form.name(class="form-control") }}
+            </div>
+          </div>
+          <div class=" md-4 order-md-1">
+            <div class="mt-3 mb-3">
+              <label for="name">Адрес</label>
+              {{ form.address(class="form-control") }}
+            </div>
+          </div>
+          <div class="md-4 form-label-group">
+            <label for="name">Email</label>
+            {{ form.email(class="form-control") }}
+            <label for="inputEmail"></label>
+          </div>
+          <div class=" md-4 order-md-1">
+            <div class="mt-3 mb-3">
+              <label for="name">Телефон</label>
+              {{ form.phone(class="form-control") }}
+            </div>
+
+        </div>
+
+
+
+          <button type="submit" class=" mt-3 mb-5 btn btn-danger">Оформить заказ</button>
+        </form>
+        </div>
+
+
+
+      <div class="col-1"></div>
+      <div class="col-7">
+        <h4 class="mb-3 col-7 mb-5">Корзина</h4>
+        <table class="table">
+          <tbody>
+              {% for g in goods %}
+                <tr>
+                  <th scope="row">{{ g[2] }}</th>
+                  <td></td>
+                  <td>{{ g[3] }}</td>
+                  <td>{{ g[4] }}</td>
+                  <td><a class="text-danger" href="/cart_remove_item/{{ g[1] }}/">Удалить</a></td>
+                </tr>
+              {% endfor %}
+          </tbody>
+        </table>
+        <hr>
+        <p class="display-4 my-2 ">{% if total == 'None' %}} 0 else {{ total }} руб {% endif %}</p>
+      </div>
+    </div>
+  </main>
+{% endblock %}

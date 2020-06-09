@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }} | Stepik Delivery</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <style>
+    /* Sticky footer styles
+    -------------------------------------------------- */
+    html {
+      position: relative;
+      min-height: 100%;
+    }
+    body {
+      margin-bottom: 60px; /* Margin bottom by footer height */
+    }
+    .footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 60px; /* Set the fixed height of the footer here */
+      line-height: 60px; /* Vertically center the text there */
+    }
+    .navbar {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <header class="container mt-3">
+    <nav class="py-1 navbar navbar-dark bg-dark">
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+          <a  href="/"><p class=" h5 my-2 text-white bg-dark">Stepik Delivery</p></a>
+      </ul>
+        <p class="my-2 text-white bg-dark "><a class="text-white bg-dark " href="/cart/"><i class="fas fa-shopping-cart"></i> {{ cart.summary }}</a></p>
+
+      {% if auth == False %}<a href="/auth/" class="btn btn-warning btn-sm ml-4">Войти</a>{% else %}
+      <a href="/logout/" class="btn btn-light btn-sm ml-4 ">Выйти</a> {% endif %}
+    </nav>
+  </header>
+{% block body %}{% endblock %}
+<footer class="footer">
+    <nav class="container navbar navbar-light bg-light">
+      <ul class="navbar-nav mr-auto">
+        <p class="h4 nav-link">Stepik Delivery</p>
+      </ul>
+      <a class="text-muted" href="#">Project author 2020</a>
+    </nav>
+  </footer>
+<script src="https://kit.fontawesome.com/561b7150d6.js" crossorigin="anonymous"></script>
+</html>
